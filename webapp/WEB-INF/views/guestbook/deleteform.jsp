@@ -4,8 +4,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link href="/mysite/assets/css/guestbook.css" rel="stylesheet" type="text/css">
-	<title>Insert title here</title>
+	<link href="${pageContext.request.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+	<title>GuestBookDeleteForm</title>
 </head>
 <body>
 	<div id="container">
@@ -20,15 +20,15 @@
 			<div id="content">
 				<div id="guestbook" class="delete-form">
 					
-					<form method="post" action="/mysite/gb">
+					<form method="post" action="${pageContext.request.contextPath }/gb/delete">
 						
 						<label>비밀번호</label>
 						<input type="password" name="password">
 						<input type="submit" value="확인">
 						<input type = "hidden" name="a" value= "delete">
-						<input type = "hidden" value= ${param.no } name="no">
+						<input type = "hidden" value= ${no } name="no">
 					</form>
-					<a href="/mysite/gb?a=list">방명록 리스트</a>
+					<a href="${pageContext.request.contextPath }/gb/list">방명록 리스트</a>
 					
 				</div>
 			</div><!-- /content -->

@@ -34,7 +34,7 @@ public class UserDao {
 
 	public void update(UserVo userVo) {
 		int result = sqlsession.update("user.updateUserByEmail", userVo);
-		
+		System.out.println(result + "건 수정 성공");
 	}
 	
 }

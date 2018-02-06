@@ -7,7 +7,7 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/mysite/assets/css/board.css" rel="stylesheet"
+<link href="${pageContext.request.contextPath }/assets/css/board.css" rel="stylesheet"
 	type="text/css">
 </head>
 <body>
@@ -21,23 +21,24 @@
 
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="/mysite/bs?a=modify&no=${view.no }">
+				<form class="board-form" method="get" action="${pageContext.request.contextPath }/board/modify">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글수정</th>
 						</tr>
 						<tr>
 							<td class="label">제목</td>
-							<td><input type="text" name="title" value="${view.title}"></td>
+							<td><input type="text" name="title" value="${boardVo.title}"></td>
 						</tr>
 						<tr>
 							<td class="label">내용</td>
-							<td><textarea id="content" name="content">${view.content}</textarea></td>
+							<td><textarea id="content" name="content">${boardVo.content}</textarea></td>
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="/mysite/bs?a=view&no=${view.no}">취소</a> 
+						<a href="${pageContext.request.contextPath }/board/view&no=${boardVo.no}">취소</a> 
 						<input type="submit" value="수정">
+						<input type = "hidden" name="modify" value= "${boardVo.no }">
 					</div>
 				</form>
 			</div>

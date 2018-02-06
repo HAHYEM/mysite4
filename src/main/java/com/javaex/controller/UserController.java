@@ -32,7 +32,6 @@ public class UserController {
 		UserVo authUser = userService.login(email, password);
 		if (authUser != null) {
 			session.setAttribute("authUser", authUser);
-			System.out.println(authUser.toString());
 			return "main/index";
 		} else {
 			return "redirect:/user/loginform?result=fail";
@@ -61,14 +60,15 @@ public class UserController {
 	@RequestMapping(value = "/modifyform", method = RequestMethod.GET)
 	public String modifyform(Model model, HttpSession session) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		
+		UserVo user = userService.updateForm(authUser.getNo());
+		model.addAttribute("user", user);
 		return "user/modifyform";
 	}
 	
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public String modify(@RequestParam("name") String name, @RequestParam("password") String password, 
-						 @RequestParam("gender") String gender, HttpSession session) {
-//		session.
-		return "user/modify";
+	public String modify(@ModelAttribute UserVo userVo, HttpSession session) {
+		userService.update(userVo);
+		session.setAttribute("authUser", userVo);
+		return "redirect:/main";
 	}
 }

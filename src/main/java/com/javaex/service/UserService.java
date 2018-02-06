@@ -19,12 +19,17 @@ public class UserService {
 	public UserVo logout(int no) {
 		return userDao.getUser(no);
 	}
-
+	
 	public void join(UserVo userVo) {
 		userDao.insert(userVo);
 	}
 	
+	public UserVo updateForm(int no) {
+		UserVo user = userDao.getUser(no);
+		return user;
+	}
+	
 	public void update(UserVo userVo) {
-		
+		userDao.update(userVo);
 	}
 }

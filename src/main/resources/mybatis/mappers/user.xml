@@ -20,22 +20,22 @@
 		]]>
 	</select>
 	
-	<select id="insertUser" parameterType="com.javaex.vo.UserVo">
+	<insert id="insertUser" parameterType="com.javaex.vo.UserVo">
 		<![CDATA[
 			INSERT INTO users 
 			VALUES (seq_users_no.nextval, #{name}, #{email}, #{password}, #{gender})
 		]]>
-	</select>
+	</insert>
 	
-	<select id="updateUser" parameterType="com.javaex.vo.UserVo">
+	<update id="updateUserByEmail" parameterType="com.javaex.vo.UserVo">
 		<![CDATA[
 			UPDATE users 
-			SET name = #{name}, 
-				password = #{password}, 
-				gender = #{gender}
-			WHERE no = #{no}
+			SET name = #{name, jdbcType=VARCHAR}, 
+				password = #{password, jdbcType=VARCHAR}, 
+				gender = #{gender, jdbcType=VARCHAR}
+			WHERE email = #{email, jdbcType=VARCHAR}
 		]]>
-	</select>
+	</update>
 	
 </mapper>
 	

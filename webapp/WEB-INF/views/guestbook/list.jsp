@@ -5,8 +5,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link href="/mysite/assets/css/guestbook.css" rel="stylesheet" type="text/css">
-	<title>Insert title here</title>
+	<link href="${pageContext.request.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+	<title>GuestBookList</title>
 </head>
 <body>
 
@@ -22,7 +22,7 @@
 			<div id="content">
 				<div id="guestbook">
 					
-					<form method="get" action="/mysite/gb">
+					<form method="post" action="${pageContext.request.contextPath }/gb/insert">
 						
 						<table>
 							<tr>
@@ -34,22 +34,22 @@
 							</tr>
 							<tr>
 								<td colspan=4 align=right><input type="submit" VALUE=" 확인 " />
-								<input type = "hidden" name="a" value="add"></td>
+								<input type = "hidden" name="a" value="insert"></td>
 							</tr>
 						</table>
 					</form>
 					<ul>
 						<li>
-							<c:forEach items="${list }" var="vo">
+							<c:forEach items="${gList }" var="guestbookVo"> <!-- controller에서 쓰는거 -->
 								<table width=510 border=1>
 									<tr>
-										<td>${vo.no}</td>
-										<td>${vo.name}</td>
-										<td>${vo.regDate}</td>
-										<td><a href="/mysite/gb?a=deleteform&no=${vo.no}">삭제</a></td>
+										<td>${guestbookVo.no}</td>
+										<td>${guestbookVo.name}</td>
+										<td>${guestbookVo.regDate}</td>
+										<td><a href="${pageContext.request.contextPath }/gb/deleteform?no=${guestbookVo.no}">삭제</a></td>
 									</tr>
 									<tr>
-										<td colspan=4>${vo.content}</td>
+										<td colspan=4>${guestbookVo.content}</td>
 									</tr>
 								</table>
 		   					 <br/>
