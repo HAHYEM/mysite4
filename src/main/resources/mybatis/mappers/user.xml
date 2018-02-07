@@ -20,6 +20,14 @@
 		]]>
 	</select>
 	
+	<select id="selectUserByEmail" parameterType="string" resultType="com.javaex.vo.UserVo">
+		<![CDATA[
+			SELECT no, name, email, gender 
+			FROM users 
+			WHERE email = #{email}
+		]]>
+	</select>
+	
 	<insert id="insertUser" parameterType="com.javaex.vo.UserVo">
 		<![CDATA[
 			INSERT INTO users 

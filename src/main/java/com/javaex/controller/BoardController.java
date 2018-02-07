@@ -1,14 +1,12 @@
 package com.javaex.controller;
 
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,16 +22,16 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public String list(Model model) {
-		List<BoardVo> bList = boardService.getList();
+	public String list(Model model, 
+					   @RequestParam(value = "searchValue", required=false, defaultValue="") String searchValue){			
+		//키워드를 받고 넘겨 받은 내용을 getList() 안에 집어넣어서 (boardService에서 )처리
+		List<BoardVo> bList = boardService.getList(searchValue);
 		model.addAttribute("bList", bList);
 		return "board/list";
 	}
 	
 	@RequestMapping(value="/writeform", method=RequestMethod.GET)
 	public String writeform(Model model) {
-		List<BoardVo> bList = boardService.getList();
-		model.addAttribute("bList", bList);
 		return "board/write";
 	}
 	
@@ -52,7 +50,6 @@ public class BoardController {
 		return "board/view";
 	}
 	
-	
 	@RequestMapping(value="/delete", method=RequestMethod.GET)
 	public String delete(Model model, @RequestParam("no") int no) {
 		boardService.delete(no);
@@ -68,10 +65,9 @@ public class BoardController {
 	
 	@RequestMapping(value="/modify", method=RequestMethod.GET)
 	public String modify(@ModelAttribute BoardVo boardVo, @RequestParam("modify") int no) {
-		
 		boardVo.setNo(no);
 		boardService.modify(boardVo);
-		System.out.println("modify 함수:"+no);
+		System.out.println("modify:"+no);
 
 		return "redirect:/board/view?no="+no;
 	}

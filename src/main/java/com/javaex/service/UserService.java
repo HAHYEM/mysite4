@@ -20,6 +20,18 @@ public class UserService {
 		return userDao.getUser(no);
 	}
 	
+	public boolean emailCheck(String email) {
+		boolean result;
+		UserVo userVo = userDao.getUser(email);
+		if(userVo != null) {
+			result = false;
+		}else {
+			result = true;
+		}
+		return result;
+		
+	}
+	
 	public void join(UserVo userVo) {
 		userDao.insert(userVo);
 	}

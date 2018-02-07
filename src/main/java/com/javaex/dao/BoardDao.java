@@ -1,6 +1,7 @@
 package com.javaex.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,10 @@ public class BoardDao {
 		int result = sqlSession.update("board.updateContent", boardVo);
 		System.out.println(result + "건 수정 성공");
 		
+	}
+
+	public List<BoardVo> getSearch(Map<String, String> map) {
+		return sqlSession.selectList("board.getSearch", map);//("board.getSearch", searchValue);
 	}
 
 	

@@ -8,11 +8,12 @@ public class BoardVo {
 	String regDate;
 	int userNo;
 	String userName;
+	int rn;
 
 	public BoardVo() {
 	}
 
-	public BoardVo(int no, String title, String content, int hit, String regDate, int userNo, String userName) {
+	public BoardVo(int no, String title, String content, int hit, String regDate, int userNo, String userName, int rn) {
 		super();
 		this.no = no;
 		this.title = title;
@@ -21,6 +22,13 @@ public class BoardVo {
 		this.regDate = regDate;
 		this.userNo = userNo;
 		this.userName = userName;
+		this.rn = rn;
+	}
+
+	@Override
+	public String toString() {
+		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", hit=" + hit + ", regDate="
+				+ regDate + ", userNo=" + userNo + ", userName=" + userName + ", rn=" + rn + "]";
 	}
 
 	public int getNo() {
@@ -79,9 +87,13 @@ public class BoardVo {
 		this.userName = userName;
 	}
 
-	@Override
-	public String toString() {
-		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", hit=" + hit + ", regDate="
-				+ regDate + ", userNo=" + userNo + ", userName=" + userName + "]";
+	public int getRn() {
+		return rn;
 	}
+
+	public void setRn(int rn) {
+		this.rn = rn;
+	}
+
+	
 }

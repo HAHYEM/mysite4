@@ -7,7 +7,7 @@
 		<![CDATA[
 			SELECT no, name, password, content, reg_date regDate
 			FROM guestbook
-			ORDER BY no asc
+			ORDER BY no desc
 		]]>
 	</select>
 	
@@ -15,6 +15,7 @@
 		<![CDATA[
 			INSERT INTO guestbook
 			VALUES (seq_guestbook_no.nextval, #{name, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, sysdate)
+			
 		]]>
 	</insert>
 	
@@ -25,4 +26,16 @@
 		]]>
 	</delete>
 	
+	<select id="selectListByPage" parameterType="int" resultType="com.javaex.vo.GuestBookVo">
+		<![CDATA[
+			SELECT B.r, no, name, password, content, reg_date regDate
+			FROM(SELECT rownum r, no, name, password, content, reg_date
+     	 		 FROM (SELECT  no, name, password, content, reg_date
+           	   		   FROM guestbook
+          	   		   ORDER BY reg_date desc) A
+     			 )B
+			WHERE r >= (#{page}-1) * 5 + 1
+			AND r <= #{page} * 5
+		]]>
+	</select>
 </mapper>

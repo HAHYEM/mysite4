@@ -19,7 +19,7 @@
 		
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="board/list" method="post">
+				<form id="search_form" action="${pageContext.request.contextPath }/board/list" method="get">
 					<input type="text" id="kwd" name="searchValue" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -50,7 +50,7 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${currentPage-1>0}">
-						<li><a href="board/list&page=${currentPage-1}">◀</a></li>
+						<li><a href="/board/list&page=${currentPage-1}">◀</a></li>
 						</c:if>
 					
 						<c:forEach var="i" begin="1" end="${lastPage}" step="1">

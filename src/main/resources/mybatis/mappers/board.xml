@@ -12,6 +12,27 @@
 		]]>
 	</select>
 	
+	<select id="getSearch" parameterType="map" resultType="com.javaex.vo.BoardVo">
+		<![CDATA[
+			SELECT no, title, content, hit, reg_date regDate, user_no userNo
+			FROM board
+			WHERE title like '%'||#{searchValue, jdbcType=VARCHAR}|| '%'
+		]]>
+	</select>
+	
+	<select id="paging" parameterType="int" resultType="com.javaex.vo.BoardVo">
+		<![CDATA[
+			SELECT *
+			FROM (SELECT rownum rn, A.*
+   				  FROM (SELECT B.no, B.title, B.content, B.hit, B.reg_date regDate, B.user_no userNo, U.name userName
+            			FROM board B, users U
+            			WHERE B.user_no = U.no) A
+      			  ORDER BY rn)
+			WHERE rownum < #{eachPage}
+			AND rn > #{page} * #{eachPage}
+		]]>
+	</select>
+	
 	<insert id="writeByTitleContent" parameterType="com.javaex.vo.BoardVo">
 		<![CDATA[
 			INSERT INTO board

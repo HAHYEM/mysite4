@@ -27,6 +27,11 @@ public class UserDao {
 		return userVo;
 	}
 	
+	public UserVo getUser(String email) {
+		UserVo userVo = sqlsession.selectOne("user.selectUserByEmail", email);
+		return userVo;
+	}
+	
 	public void insert(UserVo userVo) {
 		int result = sqlsession.insert("user.insertUser", userVo);
 		System.out.println(result + "건 회원가입 성공");		
