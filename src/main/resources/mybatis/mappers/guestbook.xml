@@ -18,8 +18,34 @@
 			
 		]]>
 	</insert>
+ 	
+	<insert id="apiInsertByNo" parameterType="com.javaex.vo.GuestBookVo">
+	<selectKey keyProperty="no" resultType="int" order="BEFORE">	
+		SELECT seq_guestbook_no.nextval 
+		FROM dual
+	</selectKey>
+	<![CDATA[	
+		INSERT INTO guestbook
+        VALUES ( #{no }, #{name }, #{password }, #{content }, sysdate )
+    	]]>
+	</insert>
+
+	<select id="selectOneByNo" resultType="com.javaex.vo.GuestBookVo">
+		<![CDATA[
+			SELECT no, name, password, content, reg_date regDate
+			FROM guestbook
+			WHERE no = #{no}
+		]]>
+	</select>
 	
 	<delete id="deleteByNo" parameterType="com.javaex.vo.GuestBookVo">
+		<![CDATA[
+			DELETE FROM guestbook
+			WHERE no = #{no}
+		]]>
+	</delete>
+	
+	<delete id="apiDeleteByNo" parameterType="com.javaex.vo.GuestBookVo">
 		<![CDATA[
 			DELETE FROM guestbook
 			WHERE no = #{no}

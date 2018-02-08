@@ -19,19 +19,36 @@ public class GuestBookDao {
 	}
 
 	public void insert(GuestBookVo guestbookVo) {
-
-		int result = sqlSession.insert("guestbook.insertContent", guestbookVo); // ?가 많을 때는 vo로 받아오고 한 개일 때는 그 객체를 써주면
-																				// 된다.
+		int result = sqlSession.insert("guestbook.insertContent", guestbookVo); // ?가 많을 때는 vo로 받아오고 한 개일 때는 그 객체를 써주면 된다.
 		System.out.println(result + "건 삽입");
+	}
+	
+	public int apiInsert(GuestBookVo guestbookVo) {
+		
+		System.out.println("xml 들어가기전에 Vo " + guestbookVo.toString());
+		sqlSession.insert("guestbook.apiInsertByNo", guestbookVo);
+		System.out.println("xml 들어갔다가 나온 Vo " + guestbookVo.toString());
+	
+		return guestbookVo.getNo();
+	
+	}
+	
+	public GuestBookVo apiSelectNo(int no) {
+		GuestBookVo guestbookVo = sqlSession.selectOne("guestbook.selectOneByNo", no);
+		return guestbookVo;
 	}
 
 	public void delete(int no, String password) {
 		int result = sqlSession.delete("guestbook.deleteByNo", no);
 		System.out.println(result + "건 삭제");
 	}
+	
+	public void apiDelete(int no) {
+		int result = sqlSession.delete("guestbook.apiDeleteByNo", no);
+		System.out.println(result + "건 삭제");
+	}
 
 	public List<GuestBookVo> selectGuestbookListPage(int page) {
 		return sqlSession.selectList("guestbook.selectListByPage", page);
 	}
-
 }

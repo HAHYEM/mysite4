@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath }/assets/bootstrap/js/bootstrap.min.js"></script>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href="${pageContext.request.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
 	<link href="${pageContext.request.contextPath }/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/bootstrap/js/bootstrap.min.js"></script>
 	<title>GuestBookList</title>
 </head>
 
@@ -24,28 +25,28 @@
 		<div id="wrapper">
 			<div id="content">
 				<div id="guestbook">
-					
-					<form method="post" action="${pageContext.request.contextPath }/gb/insert">
-						
+					<%-- 
+					<form method="get" action="${pageContext.request.contextPath }/gb/list">
+					 --%>	
 						<table>
 							<tr>
-								<td>이름</td><td><input type="text" name="name" /></td>
-								<td>비밀번호</td><td><input type="password" name="password" /></td>
+								<td>이름</td><td><input type="text" name="name" id="name"/></td>
+								<td>비밀번호</td><td><input type="password" name="password" id="password" /></td>
 							</tr>
 							<tr>
-								<td colspan=4><textarea name="content" id="content"></textarea></td>
+								<td colspan=4><textarea name="content" id="content" class="textContent"></textarea></td>
 							</tr>
 							<tr>
-								<td colspan=4 align=right><input type="submit" VALUE=" 확인 " />
-								<input type = "hidden" name="a" value="insert"></td>
+								<td colspan=4 align=right><input type="submit" id="btnInsert" VALUE=" 확인 " />
+								</td>
 							</tr>
 						</table>
 						<input id = "btnDel" type="button" value="삭제예제버튼"></td>
-					</form>
+					
+					<!-- </form> -->
 					<ul id = "listArea">
-					
-					
 					</ul>
+					
 					<input id="btnNext" type="button" value=" 다음글 5개 가져오기" />
 					
 				</div><!-- /guestbook -->
@@ -79,6 +80,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+	
 <script type="text/javascript">
 	var page = 1;
 	$(document).ready(function() { //기존방식과 다르게 하기 위해 ready를 쓰는 것이다.
@@ -88,7 +90,6 @@
 	$("#btnNext").on("click", function() {
 		page = page + 1;
 		console.log(page);
-		
 		fetchList();
 	});
 	
@@ -97,6 +98,76 @@
 		$("#del-pop").modal();
 	});
 	
+	$("#listArea").on("click", ".btnDelete", function(){
+		var no = $(this).data("no");
+		deleteForm(no);
+	});
+	
+	function deleteForm(no){
+		$("#modalNo").val(no);
+		$("#modalPassword").val("");
+		$("#del-pop").modal();
+	}
+	
+	$("#btn_del").on("click", function() {
+		console.log("#btn_del");
+		var guestbookVo = {
+				no : $("#modalNo").val(),
+				password : $("#modalPassword").val()
+		}
+		console.log(guestbookVo);
+		$.ajax({
+			//보낼 때 데이터 타입
+			url : "${pageContext.request.contextPath }/gb/api/delete",		
+			type : "post",
+			contentType : "application/json",
+			data : JSON.stringify(guestbookVo),
+			
+			//받을 때 데이터 타입
+			dataType : "json",
+			success : function(gvo){
+				if(gvo){
+					console.log("제거 완료");
+					$("#del-pop").modal("hide");
+					window.location.reload()
+				} else {
+					console.log("제거 실패");
+				}
+			},
+			error : function(XHR, status, error) {
+				console.error(status + " : " + error);
+			}
+		});
+	});
+	
+ 	$("#btnInsert").on("click", function(){
+		console.log("btnInsert");
+		var guestbookVo = {
+				no : 0,
+				name : $("#name").val(),
+				password : $("#password").val(),
+				content : $(".textContent").val()
+		}
+		
+		$.ajax({
+			//보낼 때 데이터 타입
+			url : "${pageContext.request.contextPath }/gb/api/insert",		
+			type : "post",
+			contentType : "application/json",
+			data : JSON.stringify(guestbookVo),
+			
+			//받을 때 데이터 타입
+			dataType : "json",
+			success : function(guestbookVo){
+				render(guestbookVo, "up");
+			},
+			error : function(XHR, status, error) {
+				console.error(status + " : " + error);
+			}
+		});
+		
+	}); 
+ 	
 	function fetchList(){
 	
 	
@@ -135,7 +206,7 @@
 		str += "			<td>[" + gList.no + "]</td>";
 		str += "			<td>" + gList.name + "</td>";
 		str += "			<td>" + gList.regDate + "</td>";
-		str += "			<td><a href=''>삭제</a></td>";
+		str += "			<td><input class='btnDelete' type='button' value='삭제' data-no='"+ gList.no +"'/></a></td>";
 		str += "		</tr>";
 		str += "		<tr>";
 		str += "			<td colspan=4>" + gList.content + "</td>";

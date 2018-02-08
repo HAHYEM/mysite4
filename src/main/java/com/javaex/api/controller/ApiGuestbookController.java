@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,5 +28,27 @@ public class ApiGuestbookController {
 
 		return gList;
 	}
-
+	@ResponseBody
+	@RequestMapping(value="/gb/api/insert", method = RequestMethod.POST)
+	public GuestBookVo apiInsert(@RequestBody GuestBookVo guestbookVo) {
+		System.out.println(guestbookVo.toString());
+		GuestBookVo gvo = guestbookService.apiInsert(guestbookVo);
+		System.out.println(gvo.toString());
+		return gvo;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/gb/api/select", method = RequestMethod.POST)
+	public int apiSelectNo(@RequestParam("no") int no) {
+		guestbookService.apiSelectNo(no);
+		return no;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/gb/api/delete", method = RequestMethod.POST)
+	public boolean apiDelete(@RequestBody GuestBookVo guestbookVo) {
+		boolean gvo = guestbookService.apiDelete(guestbookVo);
+		System.out.println(gvo);
+		return gvo;
+	}
 }
