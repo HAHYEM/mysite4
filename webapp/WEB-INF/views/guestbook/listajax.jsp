@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/bootstrap/js/bootstrap.min.js"></script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href="${pageContext.request.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+	<link href="${pageContext.request.contextPath }/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<title>GuestBookList</title>
 </head>
+
 <body>
 
 	<div id="container">
@@ -38,6 +40,7 @@
 								<input type = "hidden" name="a" value="insert"></td>
 							</tr>
 						</table>
+						<input id = "btnDel" type="button" value="삭제예제버튼"></td>
 					</form>
 					<ul id = "listArea">
 					
@@ -55,62 +58,73 @@
 	</div> <!-- /container -->
 
 </body>
+
+<!-- 삭제팝업(모달)창 -->
+	<div class="modal fade" id="del-pop">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">방명록삭제</h4>
+				</div>
+				<div class="modal-body">
+					<label>비밀번호</label>
+					<input type="password" name="modalPassword" id="modalPassword"><br>	
+					<input type="text" name="modalPassword" value="" id="modalNo"> <br>	
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-danger" id="btn_del">삭제</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 <script type="text/javascript">
 	var page = 1;
 	$(document).ready(function() { //기존방식과 다르게 하기 위해 ready를 쓰는 것이다.
-
-		$.ajax({
-			//보낼 때 데이터 타입
-			url : "${pageContext.request.contextPath }/gb/api/list",
-			type : "post",
-			/* contentType : "application/json",*/
-			data : {
-				page : page
-			},
-
-			//받을 때 데이터 타입
-			dataType : "json",
-			success : function(gList) {
-				console.log(gList);
-
-				for (var i = 0; i < gList.length; i++) {
-					render(gList[i], "down");
-				}
-			},
-			error : function(XHR, status, error) {
-				console.error(status + " : " + error);
-
-			}
-		});
+		fetchList();
 	});
 
 	$("#btnNext").on("click", function() {
 		page = page + 1;
-		$.ajax({
-			//보낼 때 데이터 타입
-			url : "${pageContext.request.contextPath }/gb/api/list",
-			type : "post",
-			/* 			contentType : "application/json",*/
-			data : {
-				page : page
-			},
-
-			//받을 때 데이터 타입
-			dataType : "json",
-			success : function(gList) {
-				console.log(gList);
-
-				for (var i = 0; i < gList.length; i++) {
-					render(gList[i], "down");
-				}
-			},
-			error : function(XHR, status, error) {
-				console.error(status + " : " + error);
-
-			}
-		});
 		console.log(page);
+		
+		fetchList();
 	});
+	
+	$("#btnDel").on("click", function() {
+		console.log("btnDel");
+		$("#del-pop").modal();
+	});
+	
+	function fetchList(){
+	
+	
+	$.ajax({
+		//보낼 때 데이터 타입
+		url : "${pageContext.request.contextPath }/gb/api/list",
+		type : "post",
+		/* 			contentType : "application/json",*/
+		data : {
+			page : page
+		},
+
+		//받을 때 데이터 타입
+		dataType : "json",
+		success : function(gList) {
+			console.log(gList);
+
+			for (var i = 0; i < gList.length; i++) {
+				render(gList[i], "down");
+			}
+		},
+		error : function(XHR, status, error) {
+			console.error(status + " : " + error);
+
+		}
+	});
+	}
+	
 
 	function render(gList, updown) {
 

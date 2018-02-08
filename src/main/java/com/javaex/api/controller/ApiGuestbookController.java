@@ -18,7 +18,7 @@ public class ApiGuestbookController {
 	@Autowired
 	private GuestBookService guestbookService;
 
-	@ResponseBody
+	@ResponseBody //body 안에 내가 준 데이터를 넣어서 보내라 
 	@RequestMapping(value = "/gb/api/list", method = RequestMethod.POST)
 	public List<GuestBookVo> apiList(@RequestParam("page") int page) {
 
