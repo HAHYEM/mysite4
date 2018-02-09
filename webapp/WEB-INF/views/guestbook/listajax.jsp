@@ -71,7 +71,7 @@
 				<div class="modal-body">
 					<label>비밀번호</label>
 					<input type="password" name="modalPassword" id="modalPassword"><br>	
-					<input type="text" name="modalPassword" value="" id="modalNo"> <br>	
+					<input type="hidden" name="modalPassword" value="" id="modalNo"> <br>	
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
@@ -86,50 +86,63 @@
 	$(document).ready(function() { //기존방식과 다르게 하기 위해 ready를 쓰는 것이다.
 		fetchList();
 	});
-
+	/* 다음 글 버튼 클릭시 */
 	$("#btnNext").on("click", function() {
 		page = page + 1;
 		console.log(page);
 		fetchList();
 	});
+	/* scroll이 최하단에 왔을 때 계속 데이터를 보여주는 코드 */
+	$(window).on("scroll", function(){
+		console.log($(window).scrollTop() + "/" + $(document).height() + "/" + $(window).height());
+		
+		if($(window).scrollTop()==$(document).height()-$(window).height()){
+			page += 1;
+			fetchList()	
+		}
+	});
 	
+	/* 삭제버튼 예제 */
 	$("#btnDel").on("click", function() {
-		console.log("btnDel");
+		console.log("#btnDel");
 		$("#del-pop").modal();
 	});
-	
+	/* 삭제 버튼 클릭시 */
 	$("#listArea").on("click", ".btnDelete", function(){
-		var no = $(this).data("no");
-		deleteForm(no);
-	});
-	
-	function deleteForm(no){
+		var no = $(this).data("no");		//data-no 를 여기서 쓰는 것임!
 		$("#modalNo").val(no);
-		$("#modalPassword").val("");
 		$("#del-pop").modal();
-	}
-	
+	});
+	/* 팝업에 있는 삭제 버튼 클릭시 */	
 	$("#btn_del").on("click", function() {
 		console.log("#btn_del");
-		var guestbookVo = {
-				no : $("#modalNo").val(),
-				password : $("#modalPassword").val()
+		var no = $("#modalNo").val();
+		var password = $("#modalPassword").val();
+		
+		$("#modalPassword").val("");
+		
+		var modalGuestbookVo={
+			no : no,
+			password : password
 		}
-		console.log(guestbookVo);
+		console.log(modalGuestbookVo);
+		
 		$.ajax({
 			//보낼 때 데이터 타입
 			url : "${pageContext.request.contextPath }/gb/api/delete",		
 			type : "post",
 			contentType : "application/json",
-			data : JSON.stringify(guestbookVo),
+			data : JSON.stringify(modalGuestbookVo),
 			
 			//받을 때 데이터 타입
 			dataType : "json",
-			success : function(gvo){
-				if(gvo){
-					console.log("제거 완료");
+			success : function(no){
+				console.log(modalGuestbookVo.no);
+				if(no){
 					$("#del-pop").modal("hide");
-					window.location.reload()
+					$("#gbList"+modalGuestbookVo.no).remove();
+					//window.location.reload()	 새로고침 하지 않고 지우는 방법으로 하는 것이 정석이라고..ㅎ
+					console.log("제거 완료");
 				} else {
 					console.log("제거 실패");
 				}
@@ -139,7 +152,7 @@
 			}
 		});
 	});
-	
+	/* 글쓰기 버튼 클릭시 */
  	$("#btnInsert").on("click", function(){
 		console.log("btnInsert");
 		var guestbookVo = {
@@ -160,6 +173,9 @@
 			dataType : "json",
 			success : function(guestbookVo){
 				render(guestbookVo, "up");
+				$("input[name='name']").val("");
+				$("input[name='password']").val("");
+				$("textarea[name='content']").val("");
 			},
 			error : function(XHR, status, error) {
 				console.error(status + " : " + error);
@@ -200,7 +216,7 @@
 	function render(gList, updown) {
 
 		var str = "";
-		str += "<li>";
+		str += "<li id='gbList"+gList.no+"'>";
 		str += "	<table>";
 		str += "		<tr>";
 		str += "			<td>[" + gList.no + "]</td>";

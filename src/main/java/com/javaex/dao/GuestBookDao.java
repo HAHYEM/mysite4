@@ -24,10 +24,7 @@ public class GuestBookDao {
 	}
 	
 	public int apiInsert(GuestBookVo guestbookVo) {
-		
-		System.out.println("xml 들어가기전에 Vo " + guestbookVo.toString());
 		sqlSession.insert("guestbook.apiInsertByNo", guestbookVo);
-		System.out.println("xml 들어갔다가 나온 Vo " + guestbookVo.toString());
 	
 		return guestbookVo.getNo();
 	
