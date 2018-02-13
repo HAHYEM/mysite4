@@ -3,12 +3,25 @@
 
 <mapper namespace="board">
 	
+	<select id="totalCount" parameterType="String" resultType="int">
+	<![CDATA[
+			SELECT count(*)
+			FROM board
+		]]>
+			<if test="_parameter != null and _parameter != ''" >
+			where title like '%'||#{_parameter}||'%'
+			</if>
+		
+	<![CDATA[
+	]]>
+	</select>
+	
 	<select id="getList" resultType="com.javaex.vo.BoardVo">
 		<![CDATA[
 			SELECT B.no, B.title, B.content, B.hit, B.reg_date regDate, B.user_no userNo, U.name userName
 			FROM board B, users U
 			WHERE B.user_no = U.no
-			ORDER BY B.no asc
+			ORDER BY B.no desc
 		]]>
 	</select>
 	
@@ -19,17 +32,41 @@
 			WHERE title like '%'||#{searchValue, jdbcType=VARCHAR}|| '%'
 		]]>
 	</select>
-	
-	<select id="paging" parameterType="int" resultType="com.javaex.vo.BoardVo">
+
+	<select id="selectList" parameterType="map" resultType="com.javaex.vo.BoardVo">
 		<![CDATA[
-			SELECT *
-			FROM (SELECT rownum rn, A.*
-   				  FROM (SELECT B.no, B.title, B.content, B.hit, B.reg_date regDate, B.user_no userNo, U.name userName
-            			FROM board B, users U
-            			WHERE B.user_no = U.no) A
-      			  ORDER BY rn)
-			WHERE rownum < #{eachPage}
-			AND rn > #{page} * #{eachPage}
+			SELECT rn,
+       			   no,
+       			   title,
+       			   hit,
+       			   to_char(reg_date, 'YYYY-MM-DD HH:MI') regDate,
+       			   user_no userNo,
+       			   name userName
+			FROM(SELECT ROWNUM rn,
+            			no,
+            			title,
+            			hit,
+            			reg_date,
+            			user_no,
+            			name
+     			 FROM(SELECT b.no,
+                 			 b.title,
+                 			 b.hit,
+                 			 b.reg_date,
+                 			 b.user_no,
+                 			 u.name
+          			  FROM board b, users u
+            		  WHERE b.user_no = u.no
+      
+     	]]>     		  
+            		  <if test="searchValue != null and searchValue != ''">
+            		  and title like '%'||#{searchValue}|| '%'
+            		  </if>
+        <![CDATA[
+          		 	  ORDER BY no desc)t_o
+          			  )t_ro
+			WHERE rn > #{startRnum, jdbcType=INTEGER}
+			AND rn <= #{endRnum, jdbcType=INTEGER}
 		]]>
 	</select>
 	

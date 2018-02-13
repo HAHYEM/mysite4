@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gallery">
+	
+	<select id="galleryList" resultType="com.javaex.vo.GalleryVo">
+		<![CDATA[
+			SELECT no, 
+				   org_name orgName, 
+				   save_name saveName, 
+				   ex_name exName, 
+				   file_path filePath, 
+				   file_size fileSize
+			FROM gallery
+		]]>
+	</select>
+	
+	<insert id="galleryInsert" parameterType="com.javaex.vo.GalleryVo">
+		<![CDATA[
+			INSERT INTO gallery
+			VALUES(seq_gallery_no.nextval, #{orgName}, #{saveName}, #{exName}, #{filePath}, #{fileSize})
+		]]>
+	</insert>
+	
+	<delete id="galleryDelete"  parameterType="int">
+		<![CDATA[
+			DELETE FROM gallery
+			WHERE no = #{no}
+		]]>
+	</delete>
+</mapper>

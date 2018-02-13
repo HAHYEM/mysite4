@@ -22,6 +22,7 @@
 				<form id="search_form" action="${pageContext.request.contextPath }/board/list" method="get">
 					<input type="text" id="kwd" name="searchValue" value="">
 					<input type="submit" value="찾기">
+					<input type="hidden" name="crtPage" value="${bmap.crtPage}">
 				</form>
 
 				<table class="tbl-ex">
@@ -32,11 +33,12 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>		
-					<c:forEach items="${bList}" var="b" varStatus="status">
+					</tr>
+							
+					<c:forEach items="${bmap.boardList}" var="b" varStatus="status">
 						<tr>
 							<td>${b.no}</td>
-							<td><a href="${pageContext.request.contextPath }/board/view?no=${b.no}">${b.title}</a></td>
+							<td><a href="${pageContext.request.contextPath }/board/view?no=${b.no}&crtPage=${bmp.crtPage}">${b.title}</a></td>
 							<td>${b.userName}</td>
 							<td>${b.hit}</td>
 							<td>${b.regDate}</td>
@@ -49,26 +51,33 @@
 				</table>
 				<div class="pager">
 					<ul>
-						<c:if test="${currentPage-1>0}">
-						<li><a href="/board/list&page=${currentPage-1}">◀</a></li>
-						</c:if>
 					
-						<c:forEach var="i" begin="1" end="${lastPage}" step="1">
-								<c:choose>
-									<c:when test="${i == param.currentPage }">
-										<li class="selected"><a href="board/list&page=${currentPage}">${i}</a></li>
-									</c:when>
-									 <c:otherwise>
-									 <c:if test="${i <= currentPage +2 && i >= currentPage -2}">
-										<a href="board/list&page=${i}">${i}</a>
-									 </c:if>
-									 </c:otherwise> 
-								</c:choose>
-						</c:forEach>
-				
-						<c:if test="${currentPage !=lastPage }">
-						<li><a href="board/list&page=${currentPage+1}">▶</a></li>
-						</c:if>
+					<c:choose>
+						<c:when test="${bmap.searchValue != null}">
+							<c:if test="${bmap.prev}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${bmap.startPageBtnNo-1}&searchValue=${bmap.searchValue}">◀</a></li>
+							</c:if>
+							<c:forEach var="idx" begin="${bmap.startPageBtnNo }" end="${bmap.endPageBtnNo}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${idx}&searchValue=${bmap.searchValue}">${idx}</a></li>
+							</c:forEach>
+							<c:if test="${bmap.next}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${bmap.endPageBtnNo+1}&searchValue=${bmap.searchValue}">▶</a></li>
+							</c:if>
+						</c:when>
+						
+						<c:when test="${bmap.searchValue == null}">
+							<c:if test="${bmap.prev}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${startPageBtnNo-1}">◀</a></li>
+							</c:if>
+							<c:forEach var="idx" begin="${bmap.startPageBtnNo }" end="${bmap.endPageBtnNo}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${idx}">${idx}</a></li>
+							</c:forEach>
+							<c:if test="${bmap.next}">
+								<li><a href="${pageContext.request.contextPath }/board/list?crtPage=${bmap.endPageBtnNo+1}">▶</a></li>
+							</c:if>
+						</c:when>
+						
+					</c:choose>
 					</ul>
 				</div>
 				<div class="bottom">

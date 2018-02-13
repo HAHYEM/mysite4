@@ -1,5 +1,6 @@
 package com.javaex.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,24 @@ public class BoardDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	public int selectTotalCount(String searchValue) {
+		int count = sqlSession.selectOne("board.totalCount", searchValue);
+		return count;
+	}
+	
 	public List<BoardVo> getList(){
-		
-		return sqlSession.selectList("board.getList");
+		List<BoardVo> boardList = sqlSession.selectList("board.getList");
+		return boardList;
+	}
+	
+	public List<BoardVo> selectBoardList(int startRnum, int endRnum, String searchValue){
+		Map<String, Object> mapCri = new HashMap<String, Object>();
+		mapCri.put("startRnum", startRnum);
+		mapCri.put("endRnum", endRnum);
+		mapCri.put("searchValue", searchValue);
+		System.out.println("dao" + mapCri.toString());
+		List<BoardVo> boardList =  sqlSession.selectList("board.selectList", mapCri);
+		return boardList;
 	}
 
 	public void write(BoardVo boardVo) {
@@ -49,7 +65,4 @@ public class BoardDao {
 	public List<BoardVo> getSearch(Map<String, String> map) {
 		return sqlSession.selectList("board.getSearch", map);//("board.getSearch", searchValue);
 	}
-
-	
-	
 }

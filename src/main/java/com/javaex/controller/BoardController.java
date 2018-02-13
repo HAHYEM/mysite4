@@ -1,6 +1,5 @@
 package com.javaex.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,12 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public String list(Model model, 
+	public String list(Model model,
+					   @RequestParam(value = "crtPage", required=false, defaultValue="1") Integer crtPage,
 					   @RequestParam(value = "searchValue", required=false, defaultValue="") String searchValue){			
 		//키워드를 받고 넘겨 받은 내용을 getList() 안에 집어넣어서 (boardService에서 )처리
-		List<BoardVo> bList = boardService.getList(searchValue);
-		model.addAttribute("bList", bList);
+		Map<String, Object> bmap = boardService.getList(searchValue, crtPage);
+		model.addAttribute("bmap", bmap);
 		return "board/list";
 	}
 	
